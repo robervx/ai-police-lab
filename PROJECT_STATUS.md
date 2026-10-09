@@ -27,12 +27,13 @@ El código permite observar acciones y trazas; no demuestra qué modelo es «mej
   [Revisión técnica y evidencia](docs/governance/reviews/2026-10-10-lab003.md).
 - LAB-007: Git local inicializado, Python 3.14.4 y 36 paquetes fijados; restauración
   en copia limpia con 112 pruebas y lint correctos. [Desarrollo](docs/DEVELOPMENT.md).
-  CI Linux/macOS preparada; publicación y primera ejecución remota en comprobación.
+  [Repositorio privado](https://github.com/robervx/ai-police-lab) publicado en `main`.
+  [Primera CI Linux/macOS superada](https://github.com/robervx/ai-police-lab/actions/runs/38002348512); 112 pruebas por plataforma.
   Siguiente prioridad funcional: preparar el piloto LAB-001.
 - Próximo resultado útil: dos sesiones reales inspeccionables y un resumen que
   distinga ejecución, intercambios y revisión de la traza.
-- No hay tareas automáticas en segundo plano. Este estado se mantiene al trabajar
-  en el proyecto; una fecha antigua indica que debe revisarse.
+- GitHub Actions ejecuta checks en cada push/PR. No hay agentes de gestión en
+  segundo plano; este estado se mantiene al trabajar en el proyecto.
 
 ## Fases y criterios de salida
 
@@ -63,7 +64,7 @@ Prepararla no bloquea la demo. [Plan científico](docs/research/PROTOCOL.md).
 | 4 | [LAB-004](docs/governance/BACKLOG.md#lab-004) Definir comportamiento ciudadano M3 | Producto + sénior IA | Pendiente; conservar referencia M1 |
 
 Tareas transversales de prioridad 1: [LAB-007](docs/governance/BACKLOG.md#lab-007)
-(versionado/entorno: validado localmente; CI remota por comprobar) y [LAB-012](docs/governance/BACKLOG.md#lab-012)
+(versionado/entorno: restaurado localmente y checks remotos superados) y [LAB-012](docs/governance/BACKLOG.md#lab-012)
 (completar comprobación de perfiles; sénior invocado el 2026-10-10). La tabla ordena resultados funcionales;
 las prioridades del backlog indican urgencia, no números de secuencia.
 
@@ -75,7 +76,7 @@ las prioridades del backlog indican urgencia, no números de secuencia.
 | R-02 | Preguntas exactas y saludos predefinidos | La demo no mide entrevista libre | Etiquetar alcance; LAB-004 |
 | R-03 | `run_session()` no proporciona `reviewed_tags` | Tensión/cooperación no cambian por el discurso de los modelos | LAB-005; no atribuir desescalada al resultado |
 | R-04 | Defaults de proveedores, orden fijo, sin réplicas | Resultados no bastan para una clasificación neutral | LAB-003 registra condiciones y comprueba límites; LAB-006 y protocolo de estudio pendientes |
-| R-05 | Entorno fijado y restaurado en macOS/Python 3.14.4; otras plataformas por comprobar | No acredita reproducción binaria ni de respuestas LLM | LAB-007 y CI; conservar lock y versión de Python junto al código |
+| R-05 | Entorno fijado, restaurado localmente y probado en CI Linux/macOS con Python 3.14.4 | No acredita reproducción binaria ni de respuestas LLM | LAB-007 y CI; conservar lock y versión de Python junto al código |
 | R-06 | JSONL durable por evento, sin atomicidad ni reanudación | Un corte puede dejar un turno/archivo incompleto | LAB-008; conservar el log y declarar incompletitud |
 
 ## Cómo mantener este estado

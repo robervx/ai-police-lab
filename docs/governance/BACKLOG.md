@@ -87,7 +87,7 @@ de réplicas se justifica para la pregunta elegida antes de un estudio confirmat
 
 ## LAB-007
 
-**Versionado y entorno reproducible** · prioridad 1 · PM + sénior IA · validado localmente (2026-10-10); publicación/CI remota en comprobación.
+**Versionado y entorno reproducible** · prioridad 1 · PM + sénior IA · validado localmente y checks remotos superados (2026-10-10).
 
 Aceptación: disponer de fuente versionada y captura reproducible de dependencias
 de una ejecución; excluir secretos/trazas privadas; verificar restauración del
@@ -97,7 +97,9 @@ el proyecto a GitHub en esta sesión; no publicar secretos ni trazas privadas.
 Evidencia LAB-007: `.python-version`, `requirements-dev.lock` (36 paquetes),
 `docs/DEVELOPMENT.md`, `.github/workflows/checks.yml`; instalación sin resolución
 extra del proyecto, `pip check`, Ruff y 112 pruebas en copia limpia macOS Intel.
-La CI remota se registra por separado cuando haya ejecución real. La restauración
+Publicado en [GitHub privado](https://github.com/robervx/ai-police-lab);
+[primera CI](https://github.com/robervx/ai-police-lab/actions/runs/38002348512) superada en Linux y macOS,
+con 112 pruebas por plataforma, Ruff y pip check correctos. La restauración
 local no acredita reproducción binaria ni todos los Python >=3.11.
 [Revisión y evidencia](reviews/2026-10-10-lab007.md).
 

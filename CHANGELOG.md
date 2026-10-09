@@ -9,11 +9,13 @@
 - Documentada instalación sin resolver dependencias ni backend fuera del lock.
 - Configurado Ruff básico; corregido un import sin usar en `test_manifest.py`.
 - Añadida CI Linux/macOS Intel con acciones oficiales fijadas a SHA, SDKs obligatorios,
-  lint, pip check y pytest; sin claves de API. Estado remoto por comprobar.
+  lint, pip check y pytest; sin claves de API. Primera CI superada en Linux/macOS,
+  112 pruebas por plataforma. Ubuntu fijado a 24.04 tras aviso de migración del alias latest.
 - Validación en entorno de trabajo: **112 passed**, Ruff y pip check correctos.
 - Restauración en copia limpia macOS Intel/Python 3.14.4: versiones cotejadas con
   el lock, SDKs disponibles, pip check, Ruff y suite; evidencia en revisión LAB-007.
-- GitHub verificado como `robervx`; el usuario autorizó publicar el proyecto.
+- Publicado en [robervx/ai-police-lab](https://github.com/robervx/ai-police-lab), privado;
+  primer commit `8022df7`. [Primera CI superada](https://github.com/robervx/ai-police-lab/actions/runs/38002348512).
 - Revisión sénior asesora y límites en [LAB-007](docs/governance/reviews/2026-10-10-lab007.md).
 - Type-checking gradual pendiente en LAB-014. El piloto real M2 continúa pendiente.
 

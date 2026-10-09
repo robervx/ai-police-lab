@@ -69,5 +69,5 @@ asimetrías detectadas / revisión realizada / limitaciones
 
 Estado global inicial: **apto para seguir desarrollando la demo; neutralidad de
 una competición formal no demostrada**. LAB-003 y LAB-007 validados localmente; acciones pendientes: LAB-001, 005, 006 y 011.
-La CI remota requiere evidencia separada.
+CI Linux/macOS superada el 2026-10-10; evidencia enlazada en LAB-007.
 Fundamento metodológico: [bibliografía S1–S5](../research/BIBLIOGRAPHY.md).

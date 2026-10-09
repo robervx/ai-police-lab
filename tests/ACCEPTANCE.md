@@ -5,6 +5,19 @@ Esta lista define requisitos del conjunto; sus casillas históricas sin marcar
 no anulan las evidencias incrementales. El cierre de fases usa la matriz central,
 separando tests locales, servicios reales y revisión humana.
 
+## Evidencia LAB-007 (2026-10-10)
+
+Restauración desde copia limpia con Python 3.14.4/macOS Intel y las 36 versiones
+exactas de `requirements-dev.lock`: instalación editable sin resolver versiones
+adicionales, `pip check`, imports de ambos SDK y Ruff correctos; **112 passed**.
+En el entorno de trabajo también pasan las 112 pruebas. No hubo llamadas a APIs.
+
+Primer commit versionado: `8022df7e65134a2809784124b1461c3cdae72e7c`.
+Publicado en [repositorio privado](https://github.com/robervx/ai-police-lab).
+Resultados remotos de [Checks](https://github.com/robervx/ai-police-lab/actions/runs/38002348512)
+comprobados: **112 pruebas pasadas por plataforma**, Ruff y pip check correctos en
+Linux y macOS. La restauración no acredita respuestas LLM reproducibles.
+
 ## Evidencia LAB-003 (2026-10-10)
 
 Suite completa: **112 pruebas superadas** con

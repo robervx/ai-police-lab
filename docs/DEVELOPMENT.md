@@ -39,7 +39,7 @@ una base de datos o un proveedor LLM ciudadano configurable por variables de ent
 ## Verificaciones automáticas
 
 `.github/workflows/checks.yml` ejecuta los comandos anteriores en cada push,
-pull request o lanzamiento manual, sobre Linux y macOS Intel. Usa acciones fijadas
+pull request o lanzamiento manual, sobre Ubuntu 24.04 y macOS 15 Intel. Usa acciones fijadas
 por SHA, permisos de lectura del contenido y ningún secreto de proveedor.
 El workflow no configura protección de ramas: un fallo aparece como check fallido,
 pero no impide por sí mismo un push o un merge administrativo.
@@ -51,6 +51,12 @@ El análisis estático de tipos completo se incorporará gradualmente; no se afi
 que exista un gate mypy ni se reformatea todo el código en este incremento.
 Acciones oficiales: [checkout](https://github.com/actions/checkout) y
 [setup-python](https://github.com/actions/setup-python).
+
+## Alcance de los escenarios
+
+`Scenario`, el esquema de acciones y los catálogos están especializados en PL-001.
+Un escenario distinto requiere revisar esos contratos, no basta con cambiar el YAML.
+M3 incorpora un ciudadano híbrido; no exige generalizar a múltiples escenarios.
 
 ## Actualizar versiones
 
