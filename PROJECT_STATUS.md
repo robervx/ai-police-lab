@@ -27,7 +27,7 @@ El código permite observar acciones y trazas; no demuestra qué modelo es «mej
   [Revisión técnica y evidencia](docs/governance/reviews/2026-10-10-lab003.md).
 - LAB-007: Git local inicializado, Python 3.14.4 y 36 paquetes fijados; restauración
   en copia limpia con 112 pruebas y lint correctos. [Desarrollo](docs/DEVELOPMENT.md).
-  [Repositorio privado](https://github.com/robervx/ai-police-lab) publicado en `main`.
+  [Repositorio público](https://github.com/robervx/ai-police-lab) publicado en `main`.
   [Primera CI Linux/macOS superada](https://github.com/robervx/ai-police-lab/actions/runs/38002348512); 112 pruebas por plataforma.
   Siguiente prioridad funcional: preparar el piloto LAB-001.
 - Próximo resultado útil: dos sesiones reales inspeccionables y un resumen que

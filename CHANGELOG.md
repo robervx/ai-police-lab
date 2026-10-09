@@ -1,5 +1,12 @@
 # Cambios
 
+## 2026-10-10 — Repositorio público
+
+- Visibilidad de `robervx/ai-police-lab` cambiada de privada a pública por petición
+  expresa del usuario; verificada mediante GitHub CLI (`visibility: PUBLIC`).
+- Actualizados estado, backlog y enlaces de aceptación. Las exclusiones de
+  secretos, entornos y trazas privadas permanecen vigentes.
+
 ## 2026-10-10 — LAB-007: versionado, restauración y checks automáticos
 
 - Inicializado Git local y preparadas exclusiones de claves, trazas y entornos.

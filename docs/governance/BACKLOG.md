@@ -97,7 +97,7 @@ el proyecto a GitHub en esta sesión; no publicar secretos ni trazas privadas.
 Evidencia LAB-007: `.python-version`, `requirements-dev.lock` (36 paquetes),
 `docs/DEVELOPMENT.md`, `.github/workflows/checks.yml`; instalación sin resolución
 extra del proyecto, `pip check`, Ruff y 112 pruebas en copia limpia macOS Intel.
-Publicado en [GitHub privado](https://github.com/robervx/ai-police-lab);
+Publicado en [GitHub público](https://github.com/robervx/ai-police-lab);
 [primera CI](https://github.com/robervx/ai-police-lab/actions/runs/38002348512) superada en Linux y macOS,
 con 112 pruebas por plataforma, Ruff y pip check correctos. La restauración
 local no acredita reproducción binaria ni todos los Python >=3.11.
