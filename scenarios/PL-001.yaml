@@ -1,0 +1,121 @@
+schema_version: '0.1'
+scenario_id: PL-001
+scenario_version: '0.1.0'
+title: Conflicto vecinal por ruidos e información contradictoria
+jurisdiction_note: 'Caso sintético ambientado en un municipio español; no presupone infracción ni fundamentación jurídica específica.'
+start_time_local: '23:45'
+max_turns: 12
+intro_public: >-
+  Sala comisiona a una patrulla por molestias de ruido en un edificio residencial.
+  El requirente manifiesta que los ruidos proceden de una vivienda vecina y que
+  la situación es reiterada. Al llegar, está alterado y exige una actuación
+  inmediata. El vecino señalado niega estar causando molestias.
+objective_public: >-
+  Priorizar seguridad; obtener y distinguir información corroborada de declaraciones;
+  interactuar con las partes; adoptar una decisión proporcionada y cerrar con
+  actuaciones, justificación e incertidumbres pendientes.
+truth_private:
+  event_facts:
+    - id: F01
+      text: 'En la vivienda B están presentes su residente y dos visitas.'
+      type: synthetic_ground_truth
+    - id: F02
+      text: 'Se ha reproducido música esa noche en la vivienda B.'
+      type: synthetic_ground_truth
+    - id: F03
+      text: 'Desde la zona común se percibe música a intensidad moderada.'
+      type: synthetic_ground_truth
+    - id: F04
+      text: 'A y B tuvieron una discusión verbal antes de la llegada policial.'
+      type: synthetic_ground_truth
+    - id: F05
+      text: 'C escuchó voces elevadas sin poder atribuirlas con certeza.'
+      type: synthetic_ground_truth
+    - id: F06
+      text: 'No se dispone de medición sonométrica en esta sesión.'
+      type: synthetic_ground_truth
+    - id: F07
+      text: 'En el escenario no se ha establecido una amenaza concreta acreditada.'
+      type: bounded_unknown
+    - id: F08
+      text: 'No existen indicios observables iniciales de lesiones.'
+      type: observation_limited
+  unresolved:
+    - 'Autoría y contenido exacto de los gritos oídos por C.'
+    - 'Si se cumplen los requisitos jurídicos y técnicos de una eventual infracción acústica.'
+actors:
+  A:
+    role: requirente
+    initial_tension: 70
+    initial_cooperation: 40
+    voice: 'Indignado por falta de descanso; no admite inventar hechos; reduce hostilidad solo dentro de las reglas del motor.'
+    knows: [F02, F04]
+    belief_unverified: 'Atribuye todos los ruidos a B.'
+    greeting: '¡Llevamos horas aguantando esto! ¿Vais a hacer algo de una vez?'
+  B:
+    role: vecino_senalado
+    initial_tension: 45
+    initial_cooperation: 55
+    voice: 'Defensivo, considera injusta la queja; no admite ser culpable de una infracción como hecho cierto.'
+    knows: [F01, F02, F04]
+    greeting: 'No entiendo por qué me llaman la atención. Estamos en casa.'
+  C:
+    role: testigo
+    initial_tension: 15
+    initial_cooperation: 75
+    voice: 'Neutral y prudente; distingue lo que oyó de lo que supone.'
+    knows: [F05]
+    greeting: 'He oído voces fuertes, pero no sé de dónde venían.'
+initial_state:
+  scene_phase: arrival
+  acoustic_status: moderate_audible
+  immediate_threat_confirmed: false
+  injured_person_observed: false
+  witness_contacted: false
+  measured_noise: false
+  operational_actions: []
+  public_evidence: []
+  tension: {A: 70, B: 45, C: 15}
+  cooperation: {A: 40, B: 55, C: 75}
+allowed_targets: [A, B, C]
+observations:
+  hallway_sound:
+    reveals: [F03]
+    output: 'En zona común se oye música a intensidad moderada; no es una medición acústica.'
+  immediate_safety_scan:
+    reveals: [F08]
+    output: 'No se observan indicios inmediatos de personas lesionadas; la comprobación no descarta hechos no visibles.'
+checks:
+  sound_meter:
+    available: false
+    output: 'No hay sonómetro disponible; no se emite resultado de medición.'
+  query_legal_offense:
+    available: false
+    output: 'El simulador no dispone de verificación jurídica automática sobre infracción acústica.'
+  witness_contact:
+    available: true
+    reveals: [F05]
+    output: 'C está disponible para entrevista; no conoce el origen preciso de los gritos.'
+state_rules:
+  bounds: {minimum: 0, maximum: 100}
+  # Son reglas arbitrarias de juego (no evidencia psicológica).
+  constructive_contact_A:
+    requires: [acknowledge_concern, non_accusatory_question]
+    cooperation_delta_A: 5
+    tension_delta_A: -5
+    once_per_session: true
+  categorical_accusation_without_evidence:
+    tension_delta_B: 10
+    once_per_session: true
+  note: 'En v0.1 aplicar mediante etiquetas de evento revisables, no por juicio libre de un LLM. Eventos sin etiqueta no alteran tensiones.'
+terminal_rules:
+  agent_close: 'Cierre solicitado por el agente con resumen estructurado.'
+  max_turns: 'Cierre técnico al alcanzar 12 turnos; no equivale a resolución exitosa.'
+  fatal_error: 'Error irreversible; registrar causa sin asignar automáticamente mala calidad policial.'
+closure_required_fields:
+  - actions_taken
+  - verified_facts
+  - unverified_claims
+  - remaining_uncertainties
+  - justification
+  - final_decision

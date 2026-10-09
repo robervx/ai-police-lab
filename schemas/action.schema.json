@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-police-lab/schemas/action.schema.json",
+  "title": "PoliceAgentActionV0_1",
+  "description": "Una acción por turno. Validación adicional basada en el estado del escenario será responsabilidad del servidor.",
+  "oneOf": [
+    { "$ref": "#/$defs/speak" },
+    { "$ref": "#/$defs/ask" },
+    { "$ref": "#/$defs/observe" },
+    { "$ref": "#/$defs/check" },
+    { "$ref": "#/$defs/request_support" },
+    { "$ref": "#/$defs/decide" },
+    { "$ref": "#/$defs/close" }
+  ],
+  "$defs": {
+    "target": { "type": "string", "enum": ["A", "B", "C"] },
+    "speak": { "type": "object", "additionalProperties": false, "required": ["action", "target", "message"], "properties": {"action": {"const": "SPEAK"}, "target": {"$ref": "#/$defs/target"}, "message": {"type": "string", "minLength": 1, "maxLength": 1200}} },
+    "ask": { "type": "object", "additionalProperties": false, "required": ["action", "target", "question"], "properties": {"action": {"const": "ASK"}, "target": {"$ref": "#/$defs/target"}, "question": {"type": "string", "minLength": 1, "maxLength": 1200}} },
+    "observe": { "type": "object", "additionalProperties": false, "required": ["action", "observation_id"], "properties": {"action": {"const": "OBSERVE"}, "observation_id": {"type": "string", "enum": ["hallway_sound", "immediate_safety_scan"]}} },
+    "check": { "type": "object", "additionalProperties": false, "required": ["action", "check_id"], "properties": {"action": {"const": "CHECK"}, "check_id": {"type": "string", "enum": ["sound_meter", "query_legal_offense", "witness_contact"]}} },
+    "request_support": { "type": "object", "additionalProperties": false, "required": ["action", "reason"], "properties": {"action": {"const": "REQUEST_SUPPORT"}, "reason": {"type": "string", "minLength": 1, "maxLength": 1200}} },
+    "decide": { "type": "object", "additionalProperties": false, "required": ["action", "decision", "justification"], "properties": {"action": {"const": "DECIDE"}, "decision": {"type": "string", "minLength": 1, "maxLength": 1200}, "justification": {"type": "string", "minLength": 1, "maxLength": 2000}} },
+    "close": { "type": "object", "additionalProperties": false, "required": ["action", "final_decision", "actions_taken", "verified_facts", "unverified_claims", "remaining_uncertainties", "justification"], "properties": {"action": {"const": "CLOSE"}, "final_decision": {"type": "string", "minLength": 1}, "actions_taken": {"type": "array", "items": {"type": "string"}}, "verified_facts": {"type": "array", "items": {"type": "string"}}, "unverified_claims": {"type": "array", "items": {"type": "string"}}, "remaining_uncertainties": {"type": "array", "items": {"type": "string"}}, "justification": {"type": "string", "minLength": 1}} }
+  }
+}
