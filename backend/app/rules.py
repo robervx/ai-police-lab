@@ -1,19 +1,19 @@
 """Synchronous deterministic engine, without provider calls."""
 
-from copy import deepcopy
-from datetime import datetime, timezone
 import json
+from copy import deepcopy
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from jsonschema import Draft202012Validator
 
+from .models import Check, Observation
 from .scenario_loader import ROOT
 from .session_manager import Session
-from .citizen import CITIZEN_VERSION, respond
 
 
 class RuleEngine:
-    def __init__(self):
+    def __init__(self) -> None:
         schema = json.loads((ROOT / "schemas/action.schema.json").read_text())
         Draft202012Validator.check_schema(schema)
         self._validator = Draft202012Validator(schema)
@@ -23,7 +23,7 @@ class RuleEngine:
             "event_schema_version": "0.1", "event_id": str(uuid4()),
             "run_id": session.run_id, "session_id": session.session_id,
             "seq": len(session._events) + 1,
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.now(UTC).isoformat(),
             "actor": "engine", "type": kind, "payload": session.redact(payload),
         }
         if session.event_sink is not None:
@@ -56,7 +56,7 @@ class RuleEngine:
             "scenario_sha256": session.scenario_sha256, "scene_seed": session.scene_seed,
             "participant_id": session.participant_id, "provider": session.provider,
             "model_id": session.model_id, "prompt_version": session.prompt_version,
-            "citizen_model_id": CITIZEN_VERSION, "sampling_settings": {},
+            **session.citizen.metadata(), "sampling_settings": {},
             "max_turns": scenario.max_turns, "initial_context": session.public_context(),
             "max_output_tokens": session.max_output_tokens, "max_calls": session.max_calls,
             "max_retries": session.max_retries, "timeout_seconds": session.timeout_seconds,
@@ -82,22 +82,18 @@ class RuleEngine:
             return {"ok": False, "error": "invalid_target"}
         self._record(session, "agent_action_requested", action)
         kind = action["action"]
-        result = {}
+        result: dict[str, object] = {}
         event_kind = "tool_result"
-        if kind in {"OBSERVE", "CHECK"}:
-            entry = (scenario.observations[action["observation_id"]] if kind == "OBSERVE"
-                     else scenario.checks[action["check_id"]])
-            result = {"output": entry.output}
-            if kind == "CHECK":
-                result["available"] = entry.available
-            if kind == "OBSERVE" or entry.available:
-                for fact in entry.reveals:
-                    if fact not in session.state.public_evidence:
-                        session.state.public_evidence.append(fact)
-                if kind == "CHECK" and action["check_id"] == "witness_contact":
-                    session.state.witness_contacted = True
+        if kind == "OBSERVE":
+            result = self._execute_observe(session, scenario.observations[action["observation_id"]])
+        elif kind == "CHECK":
+            result = self._execute_check(session, scenario.checks[action["check_id"]], action["check_id"])
         elif kind in {"ASK", "SPEAK"}:
-            result = respond(scenario, action)
+            result, diagnostic = session.citizen.reply(
+                scenario, action, record=lambda name, payload: self._record(
+                    session, name, {"turn": session.turn + 1, **payload}))
+            if diagnostic is not None:
+                self._record(session, "citizen_diagnostic", {"turn": session.turn + 1, **diagnostic})
             event_kind = "citizen_utterance"
         elif kind in {"REQUEST_SUPPORT", "DECIDE"}:
             result = {"recorded": True, "material_effect": False}
@@ -115,7 +111,24 @@ class RuleEngine:
             self._record(session, "session_closed", {"reason": session.status, "turn": session.turn})
         return {"ok": True, "result": deepcopy(result), "turn": session.turn, "status": session.status}
 
-    def _apply_tags(self, session: Session, action: dict, tags: tuple[str, ...]):
+    def _execute_observe(self, session: Session, entry: Observation) -> dict[str, object]:
+        result: dict[str, object] = {"output": entry.output}
+        for fact in entry.reveals:
+            if fact not in session.state.public_evidence:
+                session.state.public_evidence.append(fact)
+        return result
+
+    def _execute_check(self, session: Session, entry: Check, check_id: str) -> dict[str, object]:
+        result: dict[str, object] = {"output": entry.output, "available": entry.available}
+        if entry.available:
+            for fact in entry.reveals:
+                if fact not in session.state.public_evidence:
+                    session.state.public_evidence.append(fact)
+            if check_id == "witness_contact":
+                session.state.witness_contacted = True
+        return result
+
+    def _apply_tags(self, session: Session, action: dict, tags: tuple[str, ...]) -> None:
         if action["action"] not in {"ASK", "SPEAK"}:
             return
         rules = session.scenario.state_rules

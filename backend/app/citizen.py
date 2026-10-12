@@ -1,10 +1,12 @@
 """Versioned, exact-match dialogue catalog. No model or free-text inference."""
 
+from typing import Literal
+
 from .models import Scenario
 
 CITIZEN_VERSION = "controlled-citizen-v1"
 UNKNOWN = "No tengo información suficiente para responder a esa pregunta."
-CATALOG = {
+CATALOG: dict[tuple[Literal["A", "B", "C"], str], tuple[str, str]] = {
     ("A", "¿Qué ha ocurrido esta noche?"): ("F04", "B y yo hemos tenido una discusión verbal antes de vuestra llegada."),
     ("B", "¿Ha habido música esta noche?"): ("F02", "Sí, esta noche hemos reproducido música en casa."),
     ("B", "¿Quién está en la vivienda?"): ("F01", "Estoy en casa con dos visitas."),

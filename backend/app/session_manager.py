@@ -1,8 +1,9 @@
+from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
 from uuid import uuid4
-from typing import Callable
 
+from .citizen_runtime import CitizenRuntime
 from .models import Scenario, State
 
 
@@ -14,6 +15,7 @@ class Session:
     run_id: str
     scene_seed: int
     state: State
+    citizen: CitizenRuntime = field(default_factory=CitizenRuntime, repr=False)
     model_id: str = "manual-actions-v1"
     prompt_version: str = "manual-v1"
     provider: str = "local"
@@ -39,7 +41,12 @@ class Session:
 
 
 class SessionManager:
-    def __init__(self, scenario: Scenario, scenario_sha256: str, scene_seed: int = 0):
+    def __init__(self, scenario: Scenario, scenario_sha256: str, scene_seed: int = 0,
+                 *, citizen_mode: str = "baseline", citizen_config: object = None,
+                 citizen_factory: object = None):
+        CitizenRuntime(citizen_mode, citizen_config, citizen_factory).validate_scenario(scenario)
+        self._citizen_config, self._citizen_factory = citizen_config, citizen_factory
+        self._citizen_mode = citizen_mode
         self._scenario = scenario.model_copy(deep=True)
         self._sha = scenario_sha256
         self._seed = scene_seed
@@ -57,6 +64,7 @@ class SessionManager:
             run_id=self.run_id,
             scene_seed=self._seed,
             state=self._scenario.initial_state.model_copy(deep=True),
+            citizen=CitizenRuntime(self._citizen_mode, self._citizen_config, self._citizen_factory),
             model_id=model_id,
             prompt_version=prompt_version,
             provider=provider,

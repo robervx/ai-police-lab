@@ -15,7 +15,30 @@ Ejecutar PL-001 en cuatro sesiones aisladas, una por modelo, mostrando su intera
 ## Fuera de alcance v0.1
 Diagnóstico psicológico del ciudadano, toma de decisiones policiales reales, rankings científicos, voz, vídeo, acceso a sistemas policiales, datos personales, guardias autónomos con acción externa, cálculo de eficacia operativa real.
 
-## Stack recomendado
+## Entrega vigente M5 (2026-10-10)
+
+Tras completar M4, el usuario autoriza continuar hasta completar la fase siguiente.
+M5 amplía a 2/4 participantes con IDs únicos, Gemini/Ollama y exportación pública
+JSONL/CSV. Mantiene el stack local y el ciudadano cerrado de M4. Entrega técnica
+validada localmente; piloto externo y aceptación humana separados.
+[Guía M5](M5_DEMO.md) y [DEC-007](governance/DECISIONS.md#dec-007--ampliación-m5-autorizada).
+
+## Antecedente M4 (2026-10-10)
+
+Usuario confirma demo visual de dos modelos como alcance de esta entrega. La
+implementación local usa HTTP de la biblioteca estándar de Python, HTML/CSS/JS
+sin compilación y actualización periódica cada dos segundos. Incluye proyección
+pública en servidor y replay; no React/WebSocket/SQLite. El stack siguiente queda
+como referencia para una evolución posterior, no como requisito cumplido en M4.
+[DEC-006](governance/DECISIONS.md#dec-006--entrega-local-m4-y-alcance-del-ciudadano).
+
+El ciudadano API de la demo selecciona un identificador autorizado; el motor
+renderiza una plantilla. Mantiene política sin memoria ni estado social enviado.
+La prosa libre prevista en CitizenActorAdapter y su detección de contradicciones
+no están implementadas. Este alcance cerrado permite la demo sin afirmar que se
+ha validado el ciudadano híbrido completo del diseño original.
+
+## Stack de referencia para evolución
 - Python 3.11+ / FastAPI / Pydantic v2 / pytest
 - SQLite + SQLAlchemy o sqlite3 para el MVP
 - React + TypeScript + Vite para cuatro visores
@@ -46,7 +69,8 @@ M0: parser YAML + validación de invariantes y tests.
 M1: sesión determinista de referencia en CLI, con acciones simuladas.
 M2: conectar GPT + Claude y registrar eventos sin frontend.
 M3: ciudadano LLM híbrido, validación de revelaciones y pruebas de consistencia.
-M4: arena React 2 visores, streaming de eventos, reproducción.
+M4: arena de 2 visores, proyección pública, actualización periódica y reproducción
+(local HTML/CSS/JS/HTTP, según DEC-006).
 M5: ampliar a 4 modelos, pruebas de repetición y exportación JSONL/CSV.
 
 ## Modelo de datos mínimo

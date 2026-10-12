@@ -1,0 +1,6 @@
+[
+  {"id": "openai-01", "provider": "openai", "model_id": "REPLACE_OPENAI_MODEL"},
+  {"id": "anthropic-01", "provider": "anthropic", "model_id": "REPLACE_ANTHROPIC_MODEL"},
+  {"id": "gemini-01", "provider": "gemini", "model_id": "REPLACE_GEMINI_MODEL"},
+  {"id": "ollama-01", "provider": "ollama", "model_id": "REPLACE_LOCAL_MODEL"}
+]

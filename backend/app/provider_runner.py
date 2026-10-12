@@ -1,22 +1,29 @@
 """Bounded model loop. Only public context and this session's replies leave the process."""
 
+import json
+import sys
+import time
+from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass
 from hashlib import sha256
 from importlib.metadata import version
-import json
 from pathlib import Path
-import time
-import sys
 
-from .adapters.base import PoliceModelAdapter, ProviderError
-from .event_store import JsonlEventSink
 from .acceptance import render_summary, summarize_trace
+from .adapters.base import PoliceModelAdapter, ProviderError, transport_metadata
+from .event_store import JsonlEventSink
+from .participants import participant_ids as resolve_participant_ids
 from .prompts import PROMPT_VERSION, police_instructions
 from .rules import RuleEngine
+from .run_manifest import (
+    build_manifest,
+    check_conditions,
+    collect_outcomes,
+    write_document,
+)
 from .scenario_loader import load_scenario
 from .secrets import Redactor
-from .run_manifest import build_manifest, check_conditions, collect_outcomes, write_document
 from .session_manager import Session, SessionManager
 
 
@@ -29,7 +36,8 @@ class RunResult:
     calls: int
 
 
-def run_session(session: Session, adapter: PoliceModelAdapter, *, sleep=time.sleep,
+def run_session(session: Session, adapter: PoliceModelAdapter, *,
+                sleep: Callable[[float], None] = time.sleep,
                 instructions: str | None = None) -> int:
     engine = RuleEngine()
     engine.start(session)
@@ -50,7 +58,7 @@ def run_session(session: Session, adapter: PoliceModelAdapter, *, sleep=time.sle
                 "instructions": instructions, "messages": deepcopy(messages),
                 "max_output_tokens": adapter.config.max_output_tokens,
                 "sampling_settings": {}, "sampling_mode": "provider_defaults",
-                "sdk_version": version(adapter.config.provider),
+                **transport_metadata(adapter.config.provider, lookup=version),
             })
             started = time.perf_counter()
             try:
@@ -100,13 +108,21 @@ def run_session(session: Session, adapter: PoliceModelAdapter, *, sleep=time.sle
 
 
 def run_comparison(adapters: list[PoliceModelAdapter], output: Path, *, seed: int = 42,
-                   redactor: Redactor | None = None) -> list[RunResult]:
+                   redactor: Redactor | None = None, citizen_config: object = None,
+                   citizen_factory: object = None,
+                   participant_ids: list[str] | None = None) -> list[RunResult]:
     configs = [adapter.config for adapter in adapters]
     check_conditions(configs)
+    ids = resolve_participant_ids(configs, participant_ids)
     scenario, digest = load_scenario()
-    manager = SessionManager(scenario, digest, scene_seed=seed)
+    if (citizen_config is None) != (citizen_factory is None):
+        raise ValueError("Citizen config and factory must be supplied together")
+    manager = SessionManager(scenario, digest, scene_seed=seed,
+                             citizen_mode="guarded-api" if citizen_config else "baseline",
+                             citizen_config=citizen_config, citizen_factory=citizen_factory)
     instructions = police_instructions()
-    manifest = build_manifest(configs, scenario, digest, instructions, seed=seed, run_id=manager.run_id)
+    manifest = build_manifest(configs, scenario, digest, instructions, seed=seed, run_id=manager.run_id,
+                              citizen_config=citizen_config, participant_ids=ids)
     directory = output / manager.run_id
     directory.mkdir(parents=True, exist_ok=False)
     manifest_hash = write_document(directory / "manifest.json", manifest, redactor)
@@ -125,7 +141,7 @@ def run_comparison(adapters: list[PoliceModelAdapter], output: Path, *, seed: in
             try:
                 with JsonlEventSink(path) as sink:
                     session = manager.create(
-                        config.provider, model_id=config.model_id, provider=config.provider,
+                        ids[index - 1], model_id=config.model_id, provider=config.provider,
                         prompt_version=PROMPT_VERSION, max_output_tokens=config.max_output_tokens,
                         max_calls=config.max_calls, max_retries=config.max_retries,
                         timeout_seconds=config.timeout_seconds, event_sink=sink.append, redact=redactor,

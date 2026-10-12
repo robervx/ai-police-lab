@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI POLICE LAB · Arena</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header class="top"><a href="/" class="brand"><span class="mark">AP</span> AI POLICE <b>LAB</b></a><span class="tag">LABORATORIO EXPERIMENTAL</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">OBSERVAR · COMPARAR · REVISAR</p><h1>Una escena.<br>Cuatro perspectivas.</h1><p class="lead">Explora decisiones, testimonios e incertidumbres en una simulación ficticia.</p></div>
+<aside class="launch"><span class="dot"></span><strong>Tu laboratorio local</strong><p>Ejecuta un guion sin APIs o revisa las trazas de tus modelos.</p><label for="demo-size">Participantes de la demo</label><select id="demo-size"><option value="2">2 participantes</option><option value="4" selected>4 participantes</option></select><button id="demo" class="primary">Iniciar demo local <span aria-hidden="true">↗</span></button><small>Agentes ficticios · sin consumo de tokens</small></aside></section>
+<div id="message" role="status" aria-live="polite"></div>
+<section class="workspace" aria-label="Explorador de ejecuciones">
+<div class="toolbar"><div class="selection"><label for="runs">EJECUCIÓN GUARDADA</label><select id="runs"><option value="">Todavía no hay ejecuciones</option></select></div><button id="refresh">Actualizar</button><select id="export-format" aria-label="Formato de exportación"><option value="json">JSON</option><option value="jsonl">JSONL</option><option value="csv">CSV</option></select><button id="download" disabled>Exportar eventos públicos</button></div>
+<details class="case" open><summary>Escenario <span id="scenario">PL-001</span> <span class="tag">FICTICIO</span></summary><p id="intro">Inicia una demo o selecciona una ejecución para examinar el aviso y los eventos.</p></details>
+<p id="conditions" class="hint" role="status"></p>
+<div class="playback"><button id="play" disabled aria-label="Reproducir">▶ Reproducir</button><button id="step" disabled>Paso →</button><button id="reset" disabled>Inicio</button><label class="slider-label" for="position">Paso visible</label><input id="position" type="range" min="0" max="0" value="0" disabled><output id="counter" for="position">0 / 0</output><label class="follow"><input id="follow" type="checkbox"> Actualizar cada 2 s</label></div>
+<p class="hint">Ejecución secuencial. El paso avanza un evento visible por carril; no representa tiempos ni cómputo equivalentes.</p>
+<section id="lanes" class="lanes" aria-label="Participantes"><article class="lane empty"><h2>Participante 1</h2><p>Sin ejecución seleccionada.</p></article><article class="lane empty"><h2>Participante 2</h2><p>Sin ejecución seleccionada.</p></article></section>
+</section>
+<footer><strong>Simulación, no evaluación policial.</strong><p>El cierre y el número de intercambios no acreditan calidad. La vista no incorpora declaraciones de revisión humana. La vista excluye diagnósticos privados y contexto de proveedores.</p><p>AP LAB / DEMO M5 <span>Sin ranking · sin puntuaciones</span></p></footer>
+</main>
+</body></html>

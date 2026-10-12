@@ -1,6 +1,6 @@
 """Validated, server-only scenario definition for PL-001."""
 
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -105,15 +105,17 @@ class Scenario(Model):
     closure_required_fields: list[str]
 
     @model_validator(mode="after")
-    def invariants(self):
+    def invariants(self) -> Self:
         facts = [f.id for f in self.truth_private.event_facts]
         if len(facts) != len(set(facts)):
             raise ValueError("Duplicate fact IDs")
         if set(self.allowed_targets) != set(self.actors) or set(self.actors) != {"A", "B", "C"}:
             raise ValueError("Targets must match PL-001 actors")
-        for source in [*self.actors.values(), *self.observations.values(), *self.checks.values()]:
-            refs = source.knows if isinstance(source, Actor) else source.reveals
-            if not set(refs) <= set(facts):
+        for actor in self.actors.values():
+            if not set(actor.knows) <= set(facts):
+                raise ValueError("Unknown fact reference")
+        for entry in [*self.observations.values(), *self.checks.values()]:
+            if not set(entry.reveals) <= set(facts):
                 raise ValueError("Unknown fact reference")
         state = self.initial_state
         if state.measured_noise or state.immediate_threat_confirmed or state.injured_person_observed:

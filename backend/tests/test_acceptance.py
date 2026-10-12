@@ -1,11 +1,11 @@
 """Evidence summaries must not turn completion into acceptance."""
 
-from hashlib import sha256
 import json
+from hashlib import sha256
 
 import pytest
 
-from backend.app.acceptance import summarize_trace, render_summary
+from backend.app.acceptance import render_summary, summarize_trace
 from backend.app.cli import main, run_demo
 from backend.app.event_store import export_session
 from backend.app.rules import RuleEngine
@@ -145,3 +145,18 @@ def test_demo_and_replay_show_summary(tmp_path, capsys):
     assert capsys.readouterr().out.count("Resumen de sesión") == 2
     assert main(["replay", str(paths[0])]) == 0
     assert "Revisión humana: pendiente" in capsys.readouterr().out
+
+
+def test_replay_warns_about_missing_closure(tmp_path, capsys):
+    path = trace(tmp_path, reason="")
+    assert main(["replay", str(path)]) == 0
+    assert "Sesión incompleta: la traza no contiene un cierre." in capsys.readouterr().out
+
+
+def test_main_reports_keyboard_interrupt_with_exit_code_130(tmp_path, monkeypatch, capsys):
+    def interrupted(*args, **kwargs):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr("backend.app.cli.run_demo", interrupted)
+    assert main(["demo", "--output", str(tmp_path)]) == 130
+    assert "interrumpida" in capsys.readouterr().err

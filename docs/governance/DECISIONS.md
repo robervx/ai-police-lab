@@ -59,3 +59,38 @@ Alternativas y efectos sobre demo, equidad y metodología
 Decisión y quién la toma
 Acciones de backlog y criterio de revisión
 ```
+
+## DEC-006 — Entrega local M4 y alcance del ciudadano
+
+- Fecha: 2026-10-10. Estado: alcance M4 confirmado explícitamente por usuario;
+  simplificación técnica aplicada por coordinador tras revisión de producto/sénior.
+- Entrega original: demo visual de dos modelos; M5 quedaba fuera de esa petición.
+  El límite de fase se amplía posteriormente en DEC-007.
+- Implementación: HTTP loopback, HTML/CSS/JS y polling. Reduce instalación y permite
+  inspeccionar trazas existentes sin compilación ni servicio externo. Sustituye para
+  esta entrega la arquitectura React/WebSocket propuesta; no se afirma equivalencia
+  de transporte ni capacidad multiusuario de producción.
+- Ciudadano: selección cerrada de respuestas mediante API, sin memoria conversacional;
+  mantener plantillas y conocimiento autorizado. No implementar prosa libre ni
+  presentar el selector como filtro general de contradicciones o ciudadano realista.
+- Evidencia local y revisión asesora permiten entregar código M4; credenciales,
+  piloto externo y aceptación humana pendientes en LAB-001/017. No se cierran por mocks.
+- Revisar arquitectura o ciudadano ante necesidades observadas de usuarios, nueva
+  decisión de alcance o extensión M5. No introduce métricas policiales ni estudio.
+
+## DEC-007 — Ampliación M5 autorizada
+
+- Fecha: 2026-10-10. Estado: aplicada por coordinador; usuario pide continuar la
+  siguiente fase hasta completarla después de M4.
+- Entrega: arena de 2/4 participantes, Gemini/Ollama además de OpenAI/Anthropic,
+  IDs únicos, exportación pública JSONL/CSV y pruebas locales de repetición.
+  Sustituye únicamente el límite M4 de DEC-006; mantiene stack y ciudadano cerrado.
+- Gemini/Ollama usan REST nativo con biblioteca estándar, sin añadir SDKs ni elegir
+  automáticamente modelos. Roster explícito, orden secuencial, límites comunes y
+  metadatos disponibles; no equivalencia de cómputo ni ranking.
+- Entrega técnica local comprobada con simulaciones y Chrome. No instalar modelos,
+  inventar credenciales ni presentar mocks como piloto. LAB-013/018 cerrados
+  localmente; LAB-019 recoge piloto externo y LAB-010 decisión posterior de vía.
+- Revisiones asesoras de producto, sénior, ciencia y PM consolidadas en
+  [revisión M5](reviews/2026-10-10-m5.md); no constituyen aceptación humana.
+

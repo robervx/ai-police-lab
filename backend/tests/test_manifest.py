@@ -1,8 +1,8 @@
 """Manifest evidence uses local adapters; no provider network is involved."""
 
+import json
 from dataclasses import dataclass, field
 from hashlib import sha256
-import json
 
 import pytest
 
@@ -85,7 +85,7 @@ def test_manifest_precedes_calls_and_matches_requests(tmp_path):
     assert manifest["citizen"]["version"] == "controlled-citizen-v1"
     assert manifest["scenario"]["seed"] == 42
     assert manifest["failure_policy"]["sdk_retries"] == 0
-    for i, (adapter, result) in enumerate(zip(adapters, results)):
+    for i, (adapter, result) in enumerate(zip(adapters, results, strict=True)):
         events = read_events(result.path)
         assert manifest["run_id"] == events[0]["run_id"]
         assert manifest["scenario"]["sha256"] == events[0]["payload"]["scenario_sha256"]

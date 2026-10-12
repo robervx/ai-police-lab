@@ -9,23 +9,124 @@ requires-python = ">=3.11"
 dependencies = ["pydantic>=2,<3", "PyYAML>=6,<7", "jsonschema>=4.18,<5"]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<10"]
-dev = ["ruff==0.17.0"]
+test = ["pytest>=8,<10", "pytest-cov>=6,<8"]
+dev = ["ruff==0.17.0", "mypy==2.4.0", "types-PyYAML", "types-jsonschema"]
 providers = ["openai>=1.66,<4", "anthropic>=0.49,<1", "python-dotenv>=1,<2"]
 
 [tool.setuptools.packages.find]
 include = ["backend*"]
 
+[tool.setuptools.package-data]
+"backend.app" = ["web/*.html", "web/*.css", "web/*.js"]
+
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
 pythonpath = ["."]
+
+[tool.coverage.run]
+branch = true
+source = ["backend/app"]
+
+[tool.coverage.report]
+show_missing = true
+# Umbral deliberadamente por debajo del 93% medido: deja margen a ramas que solo
+# se ejercitan con credenciales reales (LAB-001/017/019), no a regresiones locales.
+fail_under = 90
+exclude_lines = ["if __name__ == .__main__.:"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = false
+
+# Permisivo por defecto (LAB-014, etapa 1-5): el resto del árbol se incorpora
+# módulo a módulo a medida que se delimiten contratos, no de golpe.
+[[tool.mypy.overrides]]
+module = "backend.app.*"
+disallow_untyped_defs = false
+check_untyped_defs = false
+
+# Etapa 2 (LAB-014): módulos ya tipados de forma estricta en runtime
+# (dataclasses, Pydantic strict=True, Protocol). Primeros en pasar a estricto.
+[[tool.mypy.overrides]]
+module = [
+  "backend.app.adapters.base",
+  "backend.app.secrets",
+  "backend.app.event_store",
+  "backend.app.session_manager",
+  "backend.app.citizen_contract",
+]
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+# Etapa 3 (LAB-014): motor determinista. rules.py se cerró extrayendo
+# _execute_observe/_execute_check (tipadas por Observation/Check) en vez de
+# depender de una unión no correlacionada; models.py con el mismo patrón en
+# su validador `invariants`. citizen_runtime.py/citizen.py: api_config y
+# adapter_factory se mantienen `object` a propósito (desacoplados de un
+# proveedor concreto) con isinstance/callable como guarda explícita en el
+# punto de uso, no con cast(); CATALOG anotado con Literal["A","B","C"] en
+# citizen.py, no en cada consumidor. Las cuatro decisiones, revisadas por el
+# rol Sénior IA (subagente, 2026-10-12) antes del cambio.
+[[tool.mypy.overrides]]
+module = [
+  "backend.app.rules",
+  "backend.app.models",
+  "backend.app.scenario_loader",
+  "backend.app.citizen_runtime",
+  "backend.app.citizen",
+]
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+# Etapa 4 (LAB-014): adaptadores de proveedores. Los dos SDK tipados (openai,
+# anthropic) exigen formas de mensaje irreconciliables entre sí y con el
+# Protocol compartido (PoliceModelAdapter.generate, deliberadamente genérico);
+# resuelto con `# type: ignore[arg-type]` puntual en cada llamada a `.create()`,
+# no con un TypedDict común ni debilitando el Protocol (rompería la
+# comparabilidad entre proveedores). `JsonTransport.opener` tipado con un
+# Protocol local mínimo, no con el tipo concreto de urllib, para no mentir
+# sobre lo que el doble de test_m2.py implementa. Revisado por el rol Sénior
+# IA (subagente, 2026-10-12) antes del cambio, con prueba empírica propia.
+[[tool.mypy.overrides]]
+module = [
+  "backend.app.adapters.openai_adapter",
+  "backend.app.adapters.anthropic_adapter",
+  "backend.app.adapters.gemini_adapter",
+  "backend.app.adapters.ollama_adapter",
+  "backend.app.adapters.http_transport",
+]
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+# Etapa 5 (LAB-014): orquestación, CLI y servidor local de la demo. Mismos
+# patrones ya resueltos en etapas anteriores: TypedDict para el acumulador de
+# trace_inspection.py (InspectionReport/InspectionError), ensanchamiento de
+# Literal en participants.py (Participant.provider, igual que CATALOG en
+# citizen.py), unión de tipos en el dict de arena.py (igual que rules.py), y
+# un `assert isinstance` puntual para `server_port` (BaseServer de typeshed
+# no lo declara, aunque ThreadingHTTPServer sí lo tiene en runtime).
+[[tool.mypy.overrides]]
+module = [
+  "backend.app.cli",
+  "backend.app.arena",
+  "backend.app.provider_runner",
+  "backend.app.run_manifest",
+  "backend.app.public_export",
+  "backend.app.participants",
+  "backend.app.trace_inspection",
+  "backend.app.acceptance",
+]
+disallow_untyped_defs = true
+check_untyped_defs = true
 
 [tool.ruff]
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F"]
+select = ["E4", "E7", "E9", "F", "B", "I", "UP", "SIM", "C4", "RUF", "S"]
 
 [tool.ruff.lint.per-file-ignores]
 # Los SDK son opcionales: importorskip debe preceder a sus adaptadores.
 "backend/tests/test_m2.py" = ["E402"]
+# assert es el idioma estándar de pytest; "secret"/"password" son fixtures; urlopen llama al servidor loopback propio del test.
+"backend/tests/*" = ["S101", "S105", "S310"]

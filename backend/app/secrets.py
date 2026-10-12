@@ -7,7 +7,7 @@ class Redactor:
     def __init__(self, secrets: tuple[str, ...] = ()):
         self._secrets = tuple(sorted((s for s in secrets if s), key=len, reverse=True))
 
-    def __call__(self, value):
+    def __call__(self, value: object) -> object:
         if isinstance(value, str):
             for secret in self._secrets:
                 value = value.replace(secret, "[REDACTED]")

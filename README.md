@@ -1,6 +1,20 @@
-# AI Police Lab — starter de especificaciones v0.1
+# AI POLICE LAB — demo visual M5
 
 MVP de simulación híbrida de intervenciones policiales ficticias. **No es un sistema de apoyo policial real ni una evaluación científica validada.**
+
+## Abrir la demo visual
+
+```sh
+.venv/bin/python -m backend.app.cli arena
+```
+
+Abre **http://127.0.0.1:8765** y pulsa **Iniciar demo local**. Dos o cuatro carriles,
+reproducción/pausa, pasos, selección de ejecuciones y exportación pública JSON/JSONL/CSV.
+El guion local funciona sin claves ni APIs. [Guía y código por bloques](docs/M5_DEMO.md).
+
+La conexión policial y ciudadana a OpenAI/Anthropic/Gemini/Ollama está implementada y probada
+con HTTP simulado. El piloto con servicios reales y la aceptación humana siguen
+pendientes; el ciudadano elige respuestas de catálogo, no genera conversación libre.
 
 ## Seguimiento y equipo
 
@@ -20,7 +34,29 @@ no son procesos de vigilancia continua ni participantes de la simulación.
 - [Condiciones de comparabilidad](docs/governance/COMPARABILITY.md).
 - [Borrador científico](docs/research/PROTOCOL.md) y [bibliografía anotada](docs/research/BIBLIOGRAPHY.md).
 
+## Ciudadano controlado: contrato e integración local (LAB-004/015)
+
+Puedes ver cuatro casos locales: selección válida, desconocimiento autorizado,
+rechazo seguido de corrección y dos rechazos con fallback:
+
+```sh
+.venv/bin/python -m examples.citizen_contract_demo
+```
+
+[Recorrido del código, parte por parte](docs/CITIZEN_CONTRACT.md). Es un componente
+sin llamadas de API. Puedes ejecutar su integración en dos sesiones con:
+
+```sh
+.venv/bin/python -m backend.app.cli demo --citizen-mode guarded-local
+```
+
+[Recorrido integrado y trazas privadas](docs/CITIZEN_INTEGRATION.md). `demo` sin
+opción y `run` por defecto mantienen el ciudadano M1. Demo, replay e inspect son herramientas
+de inspección privada; su salida completa no es contexto público del participante.
+
 ## Documentos
+
+- [Inspección de trazas interrumpidas](docs/TRACE_INSPECTION.md): comando `inspect`, prefijo válido y límites de recuperación.
 
 - `docs/PROJECT_SPEC.md`: alcance, arquitectura, módulos, hitos y decisiones técnicas.
 - `scenarios/PL-001.yaml`: verdad sintética, información conocida/oculta, actores, estado inicial, observaciones y cierres.
@@ -155,14 +191,16 @@ sociales solo se aplican con `reviewed_tags` proporcionadas por código de confi
 el texto del agente no genera etiquetas. `demo` exporta al finalizar cada sesión;
 `run` escribe cada evento con `flush` y `fsync`. No hay transacción atómica de
 turno ni reanudación desde la traza: un corte abrupto puede dejarla incompleta.
-El ciudadano sigue siendo controlado; no hay filtro de alucinaciones LLM ni frontend.
+El ciudadano sigue siendo controlado; el modo opcional API selecciona IDs autorizados.
+El visor M4 está disponible con `arena`; no hay filtro general de alucinaciones.
 
 Las reglas sociales existen en el motor, pero el recorrido actual de `run` no
 proporciona `reviewed_tags` y el ciudadano no usa tensión/cooperación para responder.
 Por tanto, esta demo no mide efectos de empatía ni desescalada (LAB-005 del backlog).
 
 Pendiente para validar M2 en vivo: configurar ambas cuentas y modelos, ejecutar
-`run` y revisar los logs. Después, M3 incorpora ciudadano LLM; M4, interfaz visual.
+`run` y revisar los logs. El selector ciudadano API y la interfaz M4 ya están implementados con validación
+local; [activación y límites](docs/CITIZEN_API.md).
 
 ### Resumen por sesión (LAB-002)
 

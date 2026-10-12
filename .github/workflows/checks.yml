@@ -34,4 +34,17 @@ jobs:
       - name: Lint
         run: python -m ruff check backend
       - name: Tests (simulated providers, no API keys)
-        run: python -m pytest -q --tb=short
+        run: python -m pytest -q --tb=short --cov --cov-report=term-missing
+      - name: Type-check (LAB-014, etapas 1-5 completas)
+        # Las seis etapas del plan por etapas (docs/governance/BACKLOG.md#lab-014)
+        # están cerradas: mypy backend/app da 0 errores en los 28 archivos fuente,
+        # verificado localmente en macOS (2026-10-13). Primera confirmación
+        # cruzada de sistema operativo en este mismo push, vía la matriz de CI.
+        run: python -m mypy backend/app
+      - name: Dependency vulnerability scan
+        # Primera revisión (2026-10-12): 4 CVE reales en pip==26.1 (herramienta de
+        # build, no dependencia de runtime); corregido subiendo a pip==26.2.1 y
+        # regenerando el lock. Auditoría limpia confirmada; paso bloqueante.
+        run: |
+          python -m pip install pip-audit
+          python -m pip_audit -r requirements-dev.lock --strict

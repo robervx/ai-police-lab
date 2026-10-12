@@ -1,17 +1,17 @@
 """Exercise real SDK serialization/parsing against in-memory HTTP transports."""
 
-from copy import deepcopy
 import importlib
 import json
+from copy import deepcopy
 
 import pytest
 
 openai = pytest.importorskip("openai")
 anthropic = pytest.importorskip("anthropic")
 
+from backend.app.adapters.anthropic_adapter import AnthropicAdapter
 from backend.app.adapters.base import ProviderConfig
 from backend.app.adapters.openai_adapter import OpenAIAdapter
-from backend.app.adapters.anthropic_adapter import AnthropicAdapter
 from backend.app.cli import main
 from backend.app.event_store import JsonlEventSink, read_events
 from backend.app.provider_runner import run_comparison, run_session
@@ -295,6 +295,34 @@ def test_cli_dry_run_and_missing_keys(monkeypatch, tmp_path, capsys):
     assert not list(tmp_path.iterdir())
     assert main(args) == 1
     assert "Falta OPENAI_API_KEY" in capsys.readouterr().err
+
+
+def test_cli_run_rejects_participants_with_model_flags(monkeypatch, tmp_path, capsys):
+    import backend.app.cli as cli
+    monkeypatch.setattr(cli, "ROOT", tmp_path)
+    participants_file = tmp_path / "participants.json"
+    participants_file.write_text("[]")
+    args = ["run", "--participants", str(participants_file), "--openai-model", "test-openai", "--dry-run"]
+    assert main(args) == 1
+    assert "no ambas" in capsys.readouterr().err
+
+
+def test_cli_run_requires_model_id_or_env_var(monkeypatch, tmp_path, capsys):
+    import backend.app.cli as cli
+    monkeypatch.setattr(cli, "ROOT", tmp_path)
+    monkeypatch.delenv("OPENAI_MODEL_ID", raising=False)
+    args = ["run", "--anthropic-model", "test-anthropic", "--dry-run"]
+    assert main(args) == 1
+    assert "Falta OPENAI_MODEL_ID" in capsys.readouterr().err
+
+
+def test_cli_run_requires_citizen_provider_and_model_together(monkeypatch, tmp_path, capsys):
+    import backend.app.cli as cli
+    monkeypatch.setattr(cli, "ROOT", tmp_path)
+    args = ["run", "--openai-model", "test-openai", "--anthropic-model", "test-anthropic",
+            "--citizen-provider", "openai", "--dry-run"]
+    assert main(args) == 1
+    assert "--citizen-provider y --citizen-model juntos" in capsys.readouterr().err
 
 
 def test_dotenv_does_not_override_environment(monkeypatch, tmp_path, capsys):

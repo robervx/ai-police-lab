@@ -1,9 +1,9 @@
 """Read-only demo evidence; never a score or an automatic human acceptance."""
 
+import json
 from datetime import datetime
 from hashlib import sha256
 from io import StringIO
-import json
 from pathlib import Path
 from typing import Literal
 
@@ -87,7 +87,7 @@ def summarize_trace(path: Path, review_path: Path | None = None) -> dict:
 
 
 def render_summary(summary: dict) -> str:
-    def display(value):
+    def display(value: object) -> str:
         if value is None:
             return "no verificable"
         if isinstance(value, bool):

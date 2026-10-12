@@ -1,10 +1,16 @@
 """Anthropic Messages API using the same semantic input and output budget."""
 
+from typing import TYPE_CHECKING
+
 from .base import ModelReply, ProviderConfig, ProviderError
+
+if TYPE_CHECKING:
+    from anthropic import Anthropic
+    from anthropic.types import Message
 
 
 class AnthropicAdapter:
-    def __init__(self, config: ProviderConfig, api_key: str, *, client=None):
+    def __init__(self, config: ProviderConfig, api_key: str, *, client: "Anthropic | None" = None) -> None:
         from anthropic import Anthropic
 
         self.config = config
@@ -14,13 +20,21 @@ class AnthropicAdapter:
         )
 
     def generate(self, instructions: str, messages: list[dict]) -> ModelReply:
-        from anthropic import APIConnectionError, APIStatusError, APITimeoutError, APIResponseValidationError
+        from anthropic import (
+            APIConnectionError,
+            APIResponseValidationError,
+            APIStatusError,
+            APITimeoutError,
+        )
 
         try:
             response = self._client.messages.create(
                 model=self.config.model_id,
                 system=instructions,
-                messages=messages,
+                # El Protocol compartido (PoliceModelAdapter.generate) es deliberadamente
+                # genérico; el SDK exige Iterable[MessageParam], irreconciliable con la
+                # forma, igual de estricta pero distinta, que exige el SDK de OpenAI.
+                messages=messages,  # type: ignore[arg-type]
                 max_tokens=self.config.max_output_tokens,
             )
         except APITimeoutError:
@@ -38,7 +52,7 @@ class AnthropicAdapter:
             raise ProviderError("malformed_response") from None
 
     @staticmethod
-    def _normalize(response) -> ModelReply:
+    def _normalize(response: "Message") -> ModelReply:
         if not isinstance(response.model, str) or not isinstance(response.id, str):
             raise ValueError("Missing response identity")
         text = "".join(block.text for block in response.content if block.type == "text")

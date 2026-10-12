@@ -5,6 +5,40 @@ Esta lista define requisitos del conjunto; sus casillas históricas sin marcar
 no anulan las evidencias incrementales. El cierre de fases usa la matriz central,
 separando tests locales, servicios reales y revisión humana.
 
+## Evidencia M5 (2026-10-10)
+
+Suite **225 passed**, Ruff y sintaxis JS correctos. `test_m5.py` y
+`test_m5_adapters.py`: roster/identidad, proveedor repetido, cuatro sesiones,
+fallos e interrupciones, CSV/JSONL con participantes sin iniciar, redirecciones,
+respuestas malformadas/incompletas y conexión cortada con continuación del siguiente.
+Dos demos de cuatro sesiones prueban repetición del guion, no estadística de modelos.
+
+Chrome automatizado con `scripts/check_arena_browser.mjs URL CAPTURA 4` y `... 2`:
+replay, escritorio/móvil, descargas JSON/JSONL/CSV desde el botón y selección fallida
+sin datos anteriores. Las descargas se capturan como Blob en el navegador temporal;
+se comprueba esquema, participantes y cierres tras reiniciar el cursor. No se prueba
+una aplicación de hojas de cálculo externa. [Guía](../docs/M5_DEMO.md) y
+[revisión](../docs/governance/reviews/2026-10-10-m5.md).
+
+- [x] M5 técnico local: cuatro participantes trazables, arena y exportaciones verificadas.
+- [ ] M5 externo: cuatro modelos configurados y revisados con servicios reales (LAB-019).
+- [ ] Aceptación humana de la demo y elección de vía posterior (LAB-010).
+
+## Evidencia M4 y LAB-016 (2026-10-10)
+
+Suite **195 passed**, Ruff y comprobación de sintaxis JavaScript correctos.
+`test_citizen_api.py`: SDKs OpenAI/Anthropic con HTTP simulado, presupuesto agregado,
+reparación, contexto sin historial, timeout/incompletitud y manifiestos.
+`test_arena.py`: proyección pública, rutas/symlinks, corrupción, escenarios distintos,
+identidad y servidor HTTP loopback. No hay llamadas externas.
+
+Chrome automatizado mediante `scripts/check_arena_browser.mjs`: inicio local, dos
+carriles, paso, reproducción/pausa, deslizador, inicio, escritorio/móvil y selección
+fallida sin contenido anterior. Ver [guía](../docs/M4_DEMO.md) y
+[revisión](../docs/governance/reviews/2026-10-10-m4.md). La aceptación humana y piloto
+real siguen pendientes. La sección C se refiere al diseño LLM original; la demo
+implementa selección cerrada con plantilla, no detección general de alucinaciones.
+
 ## Evidencia LAB-007 (2026-10-10)
 
 Restauración desde copia limpia con Python 3.14.4/macOS Intel y las 36 versiones
@@ -83,8 +117,10 @@ límites, cierres y orden de eventos en memoria.
 La lista siguiente reúne aceptación acumulada de M0–M4; no toda ella es requisito de M2.
 En la entrega original M0 no se incluían WebSocket, exportación/replay, proveedores
 ni filtro del ciudadano LLM. M1 añade exportación y replay cronológico según lo
-descrito arriba. `test_actor_fallback_when_hallucinating` queda
-pendiente de M3; los ciudadanos de M0 usan solo saludos predefinidos.
+descrito arriba. `test_actor_fallback_when_hallucinating` se implementa en LAB-004 para propuestas
+inválidas de un selector simulado. No prueba detección general de alucinaciones
+ni el ciudadano integrado; la sección C sigue pendiente de M3. Los ciudadanos de
+M0 usaban solo saludos predefinidos.
 
 ## A. Validación de escenario
 - [ ] La ficha PL-001 carga, valida campos y expone solo `intro_public` al agente.
@@ -119,7 +155,7 @@ pendiente de M3; los ciudadanos de M0 usan solo saludos predefinidos.
 ## E. Pruebas funcionales por entrega
 - [ ] M2: GPT y Claude reciben información inicial idéntica y completan >=3 intercambios en el recorrido demostrado, conservando también intentos fallidos y cierres tempranos.
 - [ ] M2: ambas ejecuciones son independientes y registran acciones/observaciones.
-- [ ] M4: el visor muestra mensajes y acciones sin mostrar verdad oculta.
+- [x] M4 local: el visor muestra mensajes y acciones mediante proyección sin verdad oculta (tests y Chrome; no aceptación humana).
 - [ ] M2: una persona revisa los logs y confirma qué se observó y qué no se puede concluir.
 
 ## Tests de regresión obligatorios

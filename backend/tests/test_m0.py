@@ -43,6 +43,26 @@ def test_invalid_scenario(setup, mutation):
         Scenario.model_validate(data)
 
 
+@pytest.mark.parametrize("mutation", ["targets", "prior_state", "actor_tension",
+                                       "checks_catalog", "sound_meter", "closure_fields"])
+def test_invalid_scenario_additional_invariants(setup, mutation):
+    data = setup[1].scenario.model_dump()
+    if mutation == "targets":
+        data["allowed_targets"] = ["A", "B"]
+    elif mutation == "prior_state":
+        data["initial_state"]["public_evidence"] = ["already_known"]
+    elif mutation == "actor_tension":
+        data["initial_state"]["tension"]["A"] = (data["initial_state"]["tension"]["A"] + 1) % 101
+    elif mutation == "checks_catalog":
+        del data["checks"]["witness_contact"]
+    elif mutation == "sound_meter":
+        data["checks"]["sound_meter"]["available"] = True
+    else:
+        data["closure_required_fields"] = data["closure_required_fields"][:-1]
+    with pytest.raises(ValidationError):
+        Scenario.model_validate(data)
+
+
 def test_no_hidden_fact_leak(setup):
     engine, session, _ = setup
     assert session.public_context() == {"intro_public": session.scenario.intro_public}

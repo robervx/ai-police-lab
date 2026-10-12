@@ -1,6 +1,6 @@
 # Participación y comparabilidad entre modelos
 
-Versión: borrador 0.2 · 2026-10-10 · propietario: sénior IA · revisión: ciencia.
+Versión: borrador 0.3 · 2026-10-10 · propietario: sénior IA · revisión: ciencia.
 Ámbito: **comparabilidad experimental**, no certificación de equidad social,
 legalidad ni capacidad policial real. La demo puede avanzar con limitaciones declaradas.
 
@@ -18,7 +18,7 @@ policiales reales. El motor es la autoridad sobre hechos y transiciones.
 | Ciudadano | Catálogo publicado sin respuestas; misma función `respond()` | Coincidencia literal: no representa entrevista libre; condición debe identificarse |
 | Límites | CLI comparte cifras; `run_comparison()` rechaza diferencias de salida/llamadas/reintentos/timeout antes de ejecutar | Límites nominales no acreditan igual cómputo, coste ni muestreo |
 | Muestreo | Registrado como `provider_defaults` | No equivale a ajustes idénticos ni respuesta determinista |
-| Orden | OpenAI seguido de Anthropic en CLI | Sin contrabalanceo ni réplicas; posible efecto temporal/servicio |
+| Orden | Orden del roster; sin roster, OpenAI seguido de Anthropic | Sin contrabalanceo ni réplicas; posible efecto temporal/servicio |
 | Fallos | Peticiones, uso, motivo de fin y errores registrados | Separar servicio, rechazo, truncamiento, formato y cierre deliberado |
 | Estados sociales | Reglas con etiquetas revisadas en motor | `run_session()` no proporciona etiquetas; el ciudadano no usa dichos estados |
 | Reproducción | Manifiesto de protocolo, hashes de fuentes/escenario/prompt/esquema, entorno instalado y resultados observados vinculados por hash | Restauración local con lock/Python fijados (LAB-007); fuentes en disco no verifican código importado; replay no regenera respuestas |
@@ -71,3 +71,24 @@ Estado global inicial: **apto para seguir desarrollando la demo; neutralidad de
 una competición formal no demostrada**. LAB-003 y LAB-007 validados localmente; acciones pendientes: LAB-001, 005, 006 y 011.
 CI Linux/macOS superada el 2026-10-10; evidencia enlazada en LAB-007.
 Fundamento metodológico: [bibliografía S1–S5](../research/BIBLIOGRAPHY.md).
+
+## Condiciones añadidas en M5
+
+- IDs de participante únicos, incluso al repetir proveedor/modelo; manifiesto v2
+  y cotejo de identidades evitan atribuir una traza a otro carril por su posición.
+- Gemini `maxOutputTokens` y Ollama `num_predict` expresan límites nativos de salida.
+  No acreditan el mismo tokenizer, tratamiento del razonamiento ni cómputo que
+  los límites OpenAI/Anthropic. Los defaults de muestreo siguen siendo distintos.
+- Ollama se conecta a loopback; eso no prueba inferencia local. Un piloto debe
+  registrar modelo local/cloud, versión, hardware y configuración. No se registra
+  automáticamente digest de pesos, cuantización, GPU o temperatura efectiva.
+- Dos repeticiones del guion de cuatro sesiones comprueban determinismo local e
+  identidades independientes, no variabilidad de LLM ni potencia estadística.
+- CSV/JSONL públicos conservan participantes fallidos/sin iniciar. Son una
+  proyección, no un dataset completo de prompts, consumo o configuración efectiva.
+  CSV transforma celdas potencialmente interpretables como fórmulas; JSONL no.
+
+Fuentes de los parámetros nativos: [Gemini](https://ai.google.dev/api/generate-content)
+y [Ollama](https://docs.ollama.com/api/chat); posibilidad de inferencia remota mediante
+Ollama: [cloud](https://docs.ollama.com/cloud). Consultadas el 2026-10-10.
+Piloto de cuatro modelos: LAB-019; no inferir neutralidad de las pruebas simuladas.

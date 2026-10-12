@@ -37,6 +37,11 @@ def test_demo_export_and_replay(tmp_path, capsys):
     assert "session_closed" in capsys.readouterr().out
 
 
+def test_demo_rejects_unsupported_participant_count(tmp_path):
+    with pytest.raises(ValueError, match="2 o 4"):
+        run_demo(tmp_path, participants=3)
+
+
 def test_citizen_allowlist_and_testimony():
     scenario, digest = load_scenario()
     session = SessionManager(scenario, digest).create("test")

@@ -1,10 +1,16 @@
 """OpenAI Responses API; local RuleEngine remains the action authority."""
 
+from typing import TYPE_CHECKING
+
 from .base import ModelReply, ProviderConfig, ProviderError
+
+if TYPE_CHECKING:
+    from openai import OpenAI
+    from openai.types.responses import Response
 
 
 class OpenAIAdapter:
-    def __init__(self, config: ProviderConfig, api_key: str, *, client=None):
+    def __init__(self, config: ProviderConfig, api_key: str, *, client: "OpenAI | None" = None) -> None:
         from openai import OpenAI
 
         self.config = config
@@ -14,13 +20,21 @@ class OpenAIAdapter:
         )
 
     def generate(self, instructions: str, messages: list[dict]) -> ModelReply:
-        from openai import APIConnectionError, APIStatusError, APITimeoutError, APIResponseValidationError
+        from openai import (
+            APIConnectionError,
+            APIResponseValidationError,
+            APIStatusError,
+            APITimeoutError,
+        )
 
         try:
             response = self._client.responses.create(
                 model=self.config.model_id,
                 instructions=instructions,
-                input=messages,
+                # El Protocol compartido (PoliceModelAdapter.generate) es deliberadamente
+                # genérico; el SDK exige una unión de 28+ TypedDicts irreconciliable con
+                # la forma, igual de estricta pero distinta, que exige el SDK de Anthropic.
+                input=messages,  # type: ignore[arg-type]
                 max_output_tokens=self.config.max_output_tokens,
                 store=False,
             )
@@ -39,7 +53,7 @@ class OpenAIAdapter:
             raise ProviderError("malformed_response") from None
 
     @staticmethod
-    def _normalize(response) -> ModelReply:
+    def _normalize(response: "Response") -> ModelReply:
         if not isinstance(response.model, str) or not isinstance(response.id, str):
             raise ValueError("Missing response identity")
         if response.status not in {"completed", "incomplete", "failed", "cancelled", "queued", "in_progress"}:
