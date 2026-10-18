@@ -94,6 +94,9 @@ Un juez LLM sería auxiliar y requeriría validación local frente a humanos, pr
 de orden/longitud y sensibilidad a la familia del modelo. No asumir neutralidad
 ni transferir cifras de acuerdo de otros benchmarks a PL-001. [S2](BIBLIOGRAPHY.md#s2).
 
+Valoración de técnicas adicionales (trayectorias, detección por afirmación, pruebas
+adversariales): [EVALUATION_PRACTICES](EVALUATION_PRACTICES.md).
+
 ## Reproducción e informe
 
 Preparar manifiesto de código, dependencias, escenario, prompt, ciudadano, modelos,

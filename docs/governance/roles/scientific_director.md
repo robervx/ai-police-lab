@@ -8,7 +8,7 @@ a lo que sostiene la evidencia. Es un rol asesor de IA, no una credencial humana
 ## Entradas
 
 `PROJECT_STATUS.md`, `docs/research/PROTOCOL.md`, `docs/research/BIBLIOGRAPHY.md`,
-`docs/governance/COMPARABILITY.md`, escenario y resultados realmente disponibles.
+`docs/governance/COMPARABILITY.md`, `docs/research/EVALUATION_PRACTICES.md`, escenario y resultados realmente disponibles.
 
 ## Trabajo
 
@@ -18,7 +18,8 @@ a lo que sostiene la evidencia. Es un rol asesor de IA, no una credencial humana
 4. Buscar y abrir fuentes primarias; registrar autoría, año, versión, URL/DOI,
    aportación, límite y qué se leyó. Etiquetar preprints y documentación técnica.
 5. Proponer rúbricas observables y revisión humana; separar juez IA de evidencia externa.
-6. Registrar incertidumbre y resultados negativos; proponer cambios de protocolo
+6. Valorar técnicas de evaluación externas (golden, juez, trayectorias, adversariales) con la tabla de `EVALUATION_PRACTICES.md`; un texto sin fuente no es evidencia.
+7. Registrar incertidumbre y resultados negativos; proponer cambios de protocolo
    versionados, sin presentar un borrador local como preregistro público.
 
 ## Salida

@@ -94,6 +94,11 @@ de réplicas se justifica para la pregunta elegida antes de un estudio confirmat
 
 ## LAB-007
 
+Actualización 2026-10-18 para sincronizar GitHub: 238 pruebas locales pasadas,
+cobertura 92,46 %, Ruff correcto y mypy sin errores en 28 archivos. Incluye la
+entrega M3–M5/LAB-014, documentación pendiente y recursos de marca; capturas
+sueltas conservadas localmente. CI de esta entrega pendiente de comprobación.
+
 **Versionado y entorno reproducible** · prioridad 1 · PM + sénior IA · validado localmente y checks remotos superados (2026-10-10).
 
 Aceptación: disponer de fuente versionada y captura reproducible de dependencias
@@ -539,4 +544,45 @@ Registrar intentos fallidos/cierres tempranos, sin seleccionar solo recorridos
 favorables. Coordinar con LAB-001 para la pareja original y LAB-017 si se activa
 ciudadano API; no duplicar evidencias ni cerrar esas tareas por mocks. LAB-006/011
 siguen separados para diseño de réplicas y conclusiones científicas.
+
+## LAB-021
+
+**Prácticas de evaluación para la vía de paper** · prioridad 3, no bloquea demo · ciencia + sénior IA · paquete documental cerrado (2026-10-13); resto pendiente.
+
+Origen: lista de técnicas aportada por el usuario, sin fuentes. Valoración en
+[EVALUATION_PRACTICES](../research/EVALUATION_PRACTICES.md): adoptar descriptivo
+trayectorias, Q1 como detección por afirmación y pruebas adversariales del arnés;
+juez LLM solo auxiliar; golden datasets solo para lo determinista y calibración de rúbrica;
+RAG y online evals no aplican.
+Aceptación: fuentes primarias abiertas y registradas en BIBLIOGRAPHY por técnica
+adoptada; lista de pruebas adversariales del arnés revisada por el sénior; rúbrica
+de Q1 piloteada con humanos antes de cualquier afirmación. Depende de LAB-006/011.
+
+Estado 2026-10-13: hecho — valoración por técnica y ocho fuentes (S7–S14) con
+resumen, relación y límites, leídas por extracción de texto (no lectura humana
+íntegra; S14 solo resumen). Pendiente, sin bloquear la demo: lectura humana de las
+fuentes que sustenten decisiones; fuentes de golden datasets/rúbricas; versión
+publicada de preprints; lista de pruebas adversariales del arnés (sénior IA); rúbrica
+Q1 pilotada con humanos. Se reabre al diseñar el estudio (LAB-006/011).
+
+## LAB-022
+
+**Marco experimental multiescenario con primer escenario elaborado (PL-002)** · prioridad por decidir · ciencia + sénior IA + producto · pendiente de confirmación del usuario (DEC-008, propuesta 2026-10-13).
+
+Objetivo: cuatro modelos en paralelo sobre el mismo caso, con escenarios
+intercambiables y diseño lo más cercano posible a un experimento. Fases propuestas:
+1. Protocolo `experiments/<id>/` (hipótesis, variables, rúbrica, bloques, exclusiones,
+   parada) y escenario PL-002 versionado, revisados por ciencia y sénior.
+2. Esquema de escenario 0.2: constructos medidos, hechos con categoría epistémica
+   (verificable / solo testimonial / desconocido), variantes de manipulación y puntos
+   de decisión; validador y pruebas.
+3. Ejecutor de diseño: modelos × condiciones × repeticiones, orden contrabalanceado con
+   semilla registrada, todos los intentos conservados y enlazados.
+4. Anotación humana ciega (solo lo que el modelo sabía; identidad del proveedor oculta).
+5. Piloto exploratorio (amplía LAB-019) para estimar variación y costes; informe
+   descriptivo con denominadores. Congelar protocolo antes de cualquier tanda confirmatoria.
+
+Dependencias: confirmar tema, dimensión de sesgo y anotadores; LAB-006/011/021 para
+diseño y rúbrica; LAB-019 para claves y Ollama. Límites: no ranking ni «mejor policía»;
+sin extrapolar a trabajo policial real; un LLM no es la única fuente de anotación.
 

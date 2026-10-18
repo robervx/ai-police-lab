@@ -1,5 +1,22 @@
 # Cambios
 
+## 2026-10-18 — Actualización de GitHub (LAB-007)
+
+- Preparada la sincronización de M3–M5 y LAB-014 con la documentación pendiente
+  de investigación y la identidad visual. Brief marcado como referencia histórica;
+  capturas sueltas conservadas localmente.
+- Comprobación local: 238 pruebas pasadas, cobertura 92,46 %, Ruff correcto y
+  mypy sin errores en 28 archivos. Enlaces locales de la documentación revisada
+  correctos. Pilotos reales y aceptación humana siguen pendientes.
+- Corregidos el recuento S7–S14 (ocho fuentes) y una frase contradictoria del
+  registro LAB-021; no se amplía la verificación bibliográfica.
+
+## 2026-10-13 — Dirección experimental registrada (solo documentación)
+
+- Añadidos DEC-008 (propuesta, pendiente de confirmar) y LAB-022; sección
+  «Dirección propuesta» y acción 0 en `PROJECT_STATUS.md`. Sin cambios de código
+  ni de alcance vigente. Se retoma en la siguiente sesión.
+
 ## 2026-10-13 — LAB-014: completo — mypy en 0 errores en todo el árbol
 
 - Etapa 5 (orquestación/CLI) cerrada: `cli.py`, `arena.py`, `provider_runner.py`,
@@ -55,6 +72,18 @@
   uno de los 3 errores de `cli.py` desapareció como efecto colateral no
   anticipado). 238 tests, Ruff limpio, cobertura 92.41%.
   [Backlog LAB-014](docs/governance/BACKLOG.md#lab-014).
+
+## 2026-10-13 — LAB-021: valoración de prácticas de evaluación
+
+- Nueva nota `docs/research/EVALUATION_PRACTICES.md` (revisión secuencial del rol
+  director científico): siete técnicas aportadas sin fuente, clasificadas como
+  adoptar/auxiliar/no aplica. Ficha del rol y PROTOCOL enlazan la nota.
+- Búsqueda de fuentes primarias (S7–S14) con resumen, relación con PL-001 y
+  límites; S14 solo con metadatos. Ninguna lectura íntegra por humano.
+- S14 ampliada con el resumen del repositorio de Essex. LAB-021 cerrado como paquete
+  documental; PROJECT_STATUS y BACKLOG actualizados con lo pendiente.
+- Alta de LAB-021. Sin cambios de código; alcance de lectura y verificación
+  documentado por fuente en BIBLIOGRAPHY.
 
 ## 2026-10-12 — LAB-014: etapa 3 cerrada (citizen_runtime.py/citizen.py)
 

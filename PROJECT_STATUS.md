@@ -1,6 +1,6 @@
 # AI POLICE LAB — estado del proyecto
 
-**Actualización:** 2026-10-13 · **Responsable de mantenimiento:** Project Manager,
+**Actualización:** 2026-10-18 · **Responsable de mantenimiento:** Project Manager,
 integrado por el agente coordinador · **Revisión actual:** [M5](docs/governance/reviews/2026-10-10-m5.md).
 
 ## Dónde estamos
@@ -13,7 +13,14 @@ La prioridad elegida por el usuario es una **demo funcional para explorar despu�
 investigación y formación**. Aún no se elige una de esas dos vías como producto final.
 El código permite observar acciones y trazas; no demuestra qué modelo es «mejor policía».
 
-- Última validación local (LAB-013/018, 2026-10-10): **225 pruebas pasadas**, Ruff
+- Validación para la actualización de GitHub (LAB-007, 2026-10-18): **238 pruebas
+  pasadas**, cobertura **92,46 %**, Ruff correcto y mypy sin errores en 28 archivos.
+  Comandos: `.venv/bin/python -m pytest -q --tb=short --cov --cov-report=term`,
+  `.venv/bin/python -m ruff check backend` y `.venv/bin/python -m mypy backend/app`.
+  La prueba HTTP requirió permiso para abrir un puerto local fuera del sandbox.
+  Se incluyen documentación de investigación, brief histórico y recursos de marca;
+  las capturas sueltas permanecen locales. La CI de esta entrega está por comprobar.
+- Validación visual anterior (LAB-013/018, 2026-10-10): **225 pruebas pasadas**, Ruff
   y sintaxis JavaScript correctos. Chrome: 2/4 carriles, replay, escritorio/móvil,
   descargas JSON/JSONL/CSV y selección fallida sin datos anteriores.
   [Guía M5](docs/M5_DEMO.md) · [Revisión de cierre](docs/governance/reviews/2026-10-10-m5.md).

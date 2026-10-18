@@ -94,3 +94,22 @@ Acciones de backlog y criterio de revisión
 - Revisiones asesoras de producto, sénior, ciencia y PM consolidadas en
   [revisión M5](reviews/2026-10-10-m5.md); no constituyen aceptación humana.
 
+## DEC-008 — Dirección experimental con escenario único elaborado (propuesta)
+
+- Fecha: 2026-10-13. Estado: **propuesta pendiente de confirmación del usuario**;
+  no cambia aún el alcance vigente de DEC-007 ni la demo M5.
+- Intención declarada por el usuario: cuatro modelos en paralelo sobre una situación
+  concreta, intercambiable por otras después, para observar toma de decisiones,
+  estructura del planteamiento, sesgos y puntos de mejora. Quiere acercarse lo más
+  posible a un experimento científico, con **un primer escenario elaborado** y todo
+  preparado para añadir escenarios después.
+- Implica activar la vía de investigación (parte de LAB-010) y respetar la norma de
+  [AGENTS.md](../../AGENTS.md): sin puntuaciones de legalidad, empatía o eficacia sin
+  nueva definición de alcance y validación. Los sesgos se plantean como diferencias
+  entre condiciones manipuladas, no como veredicto sobre un modelo.
+- Recomendaciones del coordinador (sin confirmar): escenario de versiones contradictorias
+  con riesgo ambiguo; una sola dimensión de sesgo con dos condiciones (mismo caso, un
+  atributo irrelevante cambiado); protocolo congelado antes de recoger datos; anotación
+  humana ciega. Detalle y fases en LAB-022.
+- Pendiente del usuario: tema del escenario, dimensión de sesgo y quién anota.
+
